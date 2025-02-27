@@ -8,13 +8,17 @@ const gameBoard = (() => {
 })();
 
 // *** PLAYERS ***
-function createPlayer(name, marker) {
-  return { name, marker };
-}
+const players = [
+  {
+    name: p1,
+    marker: "x",
+  },
+  {
+    name: p2,
+    marker: "o",
+  },
+];
 
-const p1 = createPlayer("p1", "x");
-
-const p2 = createPlayer("p2", "o");
 // console.log(p1);
 
 // *** GAME LOGIC ***
