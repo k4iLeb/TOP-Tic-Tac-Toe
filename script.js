@@ -1,11 +1,13 @@
 // *** GAMEBOARD ***
 const gameBoard = (() => {
   const board = [, , , , , , , , ,];
+  const getBoard = () => board;
   const setMark = (index, player) => {
     board[index] = player;
   };
-  return { board, setMark };
+  return { setMark, board };
 })();
+console.log(gameBoard.board);
 
 // *** PLAYERS ***
 const players = [
