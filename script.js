@@ -61,22 +61,36 @@ function gameController(
       checkWin();
       switchPlayer();
     }
-    return;
   };
 
   //  **** CHECK GAME ****
   const checkWin = () => {
     const arr = board.getBoard();
-    // console.log(arr);
+    let winningPlayer = "";
+
     if (arr.filter((x) => !!x).length > 4) {
       for (let i = 0; i < 9; i += 3) {
-        if (arr[i] === arr[i + 1] && arr[i + 1] === arr[i + 2]) {
-          return `${players.filter((x) => x.marker === arr[i])[0].name} WINS`;
+        if (arr[i] && arr[i] === arr[i + 1] && arr[i + 1] === arr[i + 2]) {
+          winningPlayer = players.find((x) => x.marker === arr[i]);
+          return winningPlayer.name;
         }
       }
+      for (let i = 0; i < 3; i++) {
+        if (arr[i] && arr[i] === arr[i + 3] && arr[i] === arr[i + 6]) {
+          winningPlayer = players.find((x) => x.marker === arr[i]);
+          return winningPlayer.name;
+        }
+      }
+      if (arr[0] === arr[4] && arr[4] === arr[8]) {
+        winningPlayer = players.find((x) => x.marker === arr[0]);
+        return winningPlayer.name;
+      }
+      if (arr[2] === arr[4] && arr[4] === arr[6]) {
+        winningPlayer = players.find((x) => x.marker === arr[2]);
+        return winningPlayer.name;
+      }
     }
-
-    // console.log("hi");
+    if (arr.filter((x) => !!x).length > 6 && !winningPlayer) return "DRAW";
   };
 
   return { playRound, getActivePlayer, getBoard: board.getBoard, checkWin };
@@ -112,12 +126,15 @@ function screenController() {
     if (!selectedCell) return;
     game.playRound(selectedCell);
     showBoard();
-    if (game.checkWin()) announceWinner();
+    if (game.checkWin()) {
+      announceWinner();
+    }
   }
 
   // **** ANNOUNCE WINNER ****
   function announceWinner() {
-    console.log("WE GOT A WINNER");
+    if (game.checkWin() == "DRAW") return "DRAW";
+    else return `${game.checkWin()} WINS`;
   }
 
   // **** LISTENER ****
