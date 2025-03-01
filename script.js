@@ -10,11 +10,6 @@ function gameBoard() {
     board[index] = player;
   };
 
-  // const printBoard = () => {
-  //   const boardWithCellValues = board.map((x) => x.getValues());
-  //   console.log(boardWithCellValues);
-  // };
-
   return { setMark, getBoard };
 }
 
@@ -60,37 +55,73 @@ function gameController(
   const getActivePlayer = () => activePlayer;
   // **** Play Round ****
   const playRound = (index) => {
-    console.log(`Marking ${getActivePlayer().name}'s the index ${index}`);
-
-    board.setMark(index, getActivePlayer().marker);
-    switchPlayer();
+    if (!checkWin()) {
+      if (board.getBoard()[index]) return;
+      board.setMark(index, getActivePlayer().marker);
+      checkWin();
+      switchPlayer();
+    }
+    return;
   };
-
-  console.log(board.getBoard());
-  console.log(getActivePlayer());
-  playRound(2);
-  console.log(getActivePlayer());
-  console.log(board.getBoard());
-  // playRound(2);
-  console.log(board.getBoard());
 
   //  **** CHECK GAME ****
-  const checkGame = () => {
-    const board = gameBoard.board;
-    console.log(board);
-    // console.log(board[0].name);
+  const checkWin = () => {
+    const arr = board.getBoard();
+    // console.log(arr);
+    if (arr.filter((x) => !!x).length > 4) {
+      for (let i = 0; i < 9; i += 3) {
+        if (arr[i] === arr[i + 1] && arr[i + 1] === arr[i + 2]) {
+          return `${players.filter((x) => x.marker === arr[i])[0].name} WINS`;
+        }
+      }
+    }
 
-    // if (board[1] === board[4] && board[4] === board[7]) {
-    //   console.log(`${board[1].name} WINS`);
-    // }
-
-    // USE FOR LOOP TO CHECK
+    // console.log("hi");
   };
 
-  return { playRound, getActivePlayer };
+  return { playRound, getActivePlayer, getBoard: board.getBoard, checkWin };
 }
-const game = gameController();
 
-// gameBoard.setMark(4, p1);
-// gameBoard.setMark(7, p1);
-// checkGame();
+function screenController() {
+  const game = gameController();
+  const containerDiv = document.querySelector(".board");
+  const playerTurnDiv = document.querySelector("h2");
+
+  // **** UPDATE SCREEN ****
+
+  const board = game.getBoard();
+
+  const showBoard = () => {
+    playerTurnDiv.textContent = `${game.getActivePlayer().name}'s Turn`;
+
+    containerDiv.textContent = "";
+    board.forEach((x, index) => {
+      const cellDiv = document.createElement("button");
+      cellDiv.classList.add("cell");
+      cellDiv.dataset.id = index;
+      cellDiv.textContent = x;
+
+      containerDiv.append(cellDiv);
+    });
+  };
+
+  showBoard();
+  // **** CLICKHANDLER ****
+  function clickHandler(e) {
+    const selectedCell = e.target.dataset.id;
+    if (!selectedCell) return;
+    game.playRound(selectedCell);
+    showBoard();
+    if (game.checkWin()) announceWinner();
+  }
+
+  // **** ANNOUNCE WINNER ****
+  function announceWinner() {
+    console.log("WE GOT A WINNER");
+  }
+
+  // **** LISTENER ****
+  containerDiv.addEventListener("click", clickHandler);
+}
+
+screenController();

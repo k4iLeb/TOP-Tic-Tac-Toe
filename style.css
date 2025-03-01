@@ -3,3 +3,27 @@
   margin: 0;
   padding: 0;
 }
+
+body {
+  padding: 20px;
+}
+h2 {
+  text-align: center;
+  margin: 1rem;
+}
+
+.board {
+  margin: 0 auto;
+  max-width: 150px;
+  height: 150px;
+
+  display: grid;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  gap: 2px;
+}
+.board .cell {
+  border: 1px solid blue;
+}
+.board .cell:hover {
+  cursor: pointer;
+}
