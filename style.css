@@ -1,3 +1,13 @@
+:root {
+  font-size: 16px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+
+  --bg-main: #f5f5f5;
+  --cell-borders: #d1d1d1;
+  --big-text: #333333;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -9,39 +19,113 @@ body {
 }
 
 .container {
+  padding: 1rem;
   width: 500px;
-  height: 400px;
+  height: auto;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+input,
+button[class*="Btn"] {
+  font-family: inherit;
+  padding: 2px 5px;
+  appearance: none;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+button[class*="Btn"] {
+  padding: 5px 10px;
+  border: none;
+  font-size: 1.1rem;
+}
+.replayBtn {
+  background-color: #a9e3f4;
+}
+.replayBtn:hover {
+  background-color: #9ad9ec;
+}
+.newGameBtn,
+.startBtn {
+  background-color: #cfbaf0;
+}
+.newGameBtn:hover,
+.startBtn:hover {
+  background-color: #c2abe8;
+}
+
+input:focus {
+  outline: none;
 }
 
 body,
 .container,
 .start-screen,
-.game-screen {
+.game-screen,
+.end-screen {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 10px;
+}
+.container {
+  height: 300px;
+  background-color: var(--bg-main);
+  border-radius: 10px;
+}
+.start-screen {
+  align-items: baseline;
+}
+
+.start-screen button {
+  align-self: center;
 }
 
 h2 {
   text-align: center;
-  margin: 1rem;
+  color: var(--big-text);
+}
+
+.game-screen {
+  display: none;
+  grid-template-rows: 10% 90%;
 }
 
 .board {
   display: grid;
-  grid-template: repeat(3, minmax(50px, 1fr)) / repeat(3, minmax(50px, 1fr));
+  grid-template: repeat(3, minmax(70px, 1fr)) / repeat(3, minmax(70px, 1fr));
   gap: 2px;
+
+  border-radius: 10px;
 }
+
 .board .cell {
-  /* width: 50px; */
-  /* height: 50px; */
-  border: 1px solid blue;
+  border: var(--cell-borders);
+  font-size: 2rem;
+  background-color: white;
 }
+
+.board .cell.x-marker {
+  color: #4ebcf0;
+}
+.board .cell.o-marker {
+  color: #ff9cab;
+}
+
 .board .cell:hover {
   cursor: pointer;
+  background-color: #e8f5e9;
 }
 
 .end-screen {
   display: none;
+  height: 60%;
+}
+
+.end-screen h2 {
+  flex-grow: 2;
 }

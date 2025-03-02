@@ -65,32 +65,31 @@ function gameController(
 
   //  **** CHECK GAME ****
   const checkWin = () => {
-    const arr = board.getBoard();
-    let winningPlayer = "";
+    const boardArray = board.getBoard();
 
-    if (arr.filter((x) => !!x).length > 4) {
-      for (let i = 0; i < 9; i += 3) {
-        if (arr[i] && arr[i] === arr[i + 1] && arr[i + 1] === arr[i + 2]) {
-          winningPlayer = players.find((x) => x.marker === arr[i]);
-          return winningPlayer.name;
-        }
-      }
-      for (let i = 0; i < 3; i++) {
-        if (arr[i] && arr[i] === arr[i + 3] && arr[i] === arr[i + 6]) {
-          winningPlayer = players.find((x) => x.marker === arr[i]);
-          return winningPlayer.name;
-        }
-      }
-      if (arr[0] === arr[4] && arr[4] === arr[8]) {
-        winningPlayer = players.find((x) => x.marker === arr[0]);
-        return winningPlayer.name;
-      }
-      if (arr[2] === arr[4] && arr[4] === arr[6]) {
-        winningPlayer = players.find((x) => x.marker === arr[2]);
-        return winningPlayer.name;
+    const winningCombinations = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    for (const combination of winningCombinations) {
+      const [a, b, c] = combination;
+      if (
+        boardArray[a] &&
+        boardArray[a] === boardArray[b] &&
+        boardArray[a] === boardArray[c]
+      ) {
+        return players.find((x) => x.marker === boardArray[a]).name;
       }
     }
-    if (arr.filter((x) => !!x).length > 7 && !winningPlayer) return "DRAW";
+    if (boardArray.filter((x) => !!x).length === 9) return "DRAW";
+    return null;
   };
 
   return { playRound, getActivePlayer, getBoard: board.getBoard, checkWin };
@@ -108,10 +107,20 @@ function screenController() {
   const playerTurnDiv = document.querySelector("h2");
 
   const endScreen = document.querySelector(".end-screen");
+  const startNewGameBtn = document.querySelector(".newGameBtn");
+  const replayBtn = document.querySelector(".replayBtn");
+
+  // **** START NEW GAME ****
+  function startNewGame() {
+    startScreen.style.display = "flex";
+    endScreen.style.display = "none";
+  }
 
   // **** STARTING SCREEN ****
-  function startNewGame() {
+  function startGame() {
     startScreen.style.display = "none";
+    gameScreen.style.display = "flex";
+    endScreen.style.display = "none";
     const playerArray = Array.from(playerInputs).map((x) => {
       return x.value === "" ? (x = x.attributes[3].value) : x.value;
     });
@@ -134,12 +143,13 @@ function screenController() {
       cellDiv.classList.add("cell");
       cellDiv.dataset.id = index;
       cellDiv.textContent = x;
+      if (cellDiv.textContent === "x") cellDiv.classList.add("x-marker");
+      if (cellDiv.textContent === "o") cellDiv.classList.add("o-marker");
 
       containerDiv.append(cellDiv);
     });
   };
 
-  // showBoard();
   // **** CLICKHANDLER ****
   function clickHandler(e) {
     const selectedCell = e.target.dataset.id;
@@ -147,8 +157,6 @@ function screenController() {
     game.playRound(selectedCell);
     showBoard();
     if (game.checkWin()) {
-      console.log("lol");
-
       announceWinner();
     }
   }
@@ -158,13 +166,15 @@ function screenController() {
     gameScreen.style.display = "none";
     startScreen.style.display = "none";
     endScreen.style.display = "flex";
-    if (game.checkWin() == "DRAW") return "DRAW";
-    else return `${game.checkWin()} WINS`;
+    endScreen.children[0].textContent =
+      game.checkWin() === "DRAW" ? "DRAW" : `${game.checkWin()} WINS`;
   }
 
   // **** LISTENER ****
   containerDiv.addEventListener("click", clickHandler);
-  startBtn.addEventListener("click", startNewGame);
+  startBtn.addEventListener("click", startGame);
+  startNewGameBtn.addEventListener("click", startNewGame);
+  replayBtn.addEventListener("click", startGame);
 }
 
 screenController();
