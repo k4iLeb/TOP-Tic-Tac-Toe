@@ -57,6 +57,10 @@ button[class*="Btn"] {
   background-color: #c2abe8;
 }
 
+input {
+  width: 200px;
+}
+
 input:focus {
   outline: none;
 }
