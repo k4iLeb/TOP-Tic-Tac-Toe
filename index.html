@@ -7,18 +7,43 @@
     <title>Tic-Tac-Toe</title>
   </head>
   <body>
-    <div class="cotainer">
-      <h2 class="turn"></h2>
-      <div class="board">
-        <!-- <button class="cell" id="1"></button>
-        <button class="cell" id="2"></button>
-        <button class="cell" id="3"></button>
-        <button class="cell" id="4"></button>
-        <button class="cell" id="5"></button>
-        <button class="cell" id="6"></button>
-        <button class="cell" id="7"></button>
-        <button class="cell" id="8"></button>
-        <button class="cell" id="9"></button> -->
+    <div class="container">
+      <div class="start-screen">
+        <label for="player-one">Player One:</label>
+        <input
+          type="text"
+          name="player-one"
+          id="player-one"
+          placeholder="Player One"
+        />
+        <label for="player-two">Player Two:</label>
+        <input
+          type="text"
+          name="player-two"
+          id="player-two"
+          placeholder="Player Two"
+        />
+        <button class="startBtn">New game</button>
+      </div>
+      <div class="game-screen">
+        <h2 class="turn"></h2>
+        <div class="board">
+          <!-- <button class="cell" id="1"></button>
+          <button class="cell" id="2"></button>
+          <button class="cell" id="3"></button>
+          <button class="cell" id="4"></button>
+          <button class="cell" id="5"></button>
+          <button class="cell" id="6"></button>
+          <button class="cell" id="7"></button>
+          <button class="cell" id="8"></button>
+          <button class="cell" id="9"></button> -->
+        </div>
+      </div>
+      <div class="end-screen">
+        <h2 class="winner"></h2>
+        <div class="btns">
+          <button>Start New Game</button><button>Replay</button>
+        </div>
       </div>
     </div>
     <script src="./script.js"></script>

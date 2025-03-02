@@ -90,22 +90,42 @@ function gameController(
         return winningPlayer.name;
       }
     }
-    if (arr.filter((x) => !!x).length > 6 && !winningPlayer) return "DRAW";
+    if (arr.filter((x) => !!x).length > 7 && !winningPlayer) return "DRAW";
   };
 
   return { playRound, getActivePlayer, getBoard: board.getBoard, checkWin };
 }
 
 function screenController() {
-  const game = gameController();
+  let game = gameController();
+  // **** SELECTORS ****
+  const startScreen = document.querySelector(".start-screen");
+  const startBtn = document.querySelector(".startBtn");
+  const playerInputs = document.querySelectorAll(".start-screen input");
+
+  const gameScreen = document.querySelector(".game-screen");
   const containerDiv = document.querySelector(".board");
   const playerTurnDiv = document.querySelector("h2");
 
+  const endScreen = document.querySelector(".end-screen");
+
+  // **** STARTING SCREEN ****
+  function startNewGame() {
+    startScreen.style.display = "none";
+    const playerArray = Array.from(playerInputs).map((x) => {
+      return x.value === "" ? (x = x.attributes[3].value) : x.value;
+    });
+    const [player1, player2] = playerArray;
+
+    game = gameController(player1, player2);
+
+    showBoard();
+  }
+
   // **** UPDATE SCREEN ****
 
-  const board = game.getBoard();
-
   const showBoard = () => {
+    const board = game.getBoard();
     playerTurnDiv.textContent = `${game.getActivePlayer().name}'s Turn`;
 
     containerDiv.textContent = "";
@@ -119,7 +139,7 @@ function screenController() {
     });
   };
 
-  showBoard();
+  // showBoard();
   // **** CLICKHANDLER ****
   function clickHandler(e) {
     const selectedCell = e.target.dataset.id;
@@ -127,18 +147,24 @@ function screenController() {
     game.playRound(selectedCell);
     showBoard();
     if (game.checkWin()) {
+      console.log("lol");
+
       announceWinner();
     }
   }
 
   // **** ANNOUNCE WINNER ****
   function announceWinner() {
+    gameScreen.style.display = "none";
+    startScreen.style.display = "none";
+    endScreen.style.display = "flex";
     if (game.checkWin() == "DRAW") return "DRAW";
     else return `${game.checkWin()} WINS`;
   }
 
   // **** LISTENER ****
   containerDiv.addEventListener("click", clickHandler);
+  startBtn.addEventListener("click", startNewGame);
 }
 
 screenController();
